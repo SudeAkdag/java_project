@@ -2,3 +2,4 @@
 "EMİR BURDAYDI"
 "elif öğrendi"
 "sude onayladı"
+"tunada hepsini onayladi"
