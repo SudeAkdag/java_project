@@ -3,3 +3,4 @@
 "elif öğrendi"
 "sude onayladı"
 "tunada hepsini onayladi"
+"arda"
