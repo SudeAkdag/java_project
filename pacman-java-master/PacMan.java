@@ -90,24 +90,24 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     //Ghosts: b = blue, o = orange, p = pink, r = red
    public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
+            "X        X        X",
+            "X XX  X X X X X X X",
             "X                 X",
-            "X XX XXX X XXX XX X",
-            "X                 X",
-            "X XX X XXXXX X XX X",
-            "X                 X",
-            "XXXX XXXX XXXX XXXX",
-            "XX               XX",
-            "XX  X XXrXX X    XX",
-            "X        b        X",
+            "X XX X X   X X XX X",
+            "X    X       X    X",
+            "X  X XX     XX    X",
+            "X    X       X    X",
+            "X    X XXrXX X    X",
+            "X      XbpoX      X",
+            "X      XXXXX      X",
+            "XX  X X      X X XX",
             "XXXX X XXXXX X XXXX",
-            "XX               XX",
-            "XXXX X XXXXX X XXXX",
-            "X                 X",
+            "X        X        X",
             "X XX XXX X XXX XX X",
-            "X                 X",
-            "XX X X XXXXX X X XX",
-            "X                 X",
-            "X XXXXXX X XXXXXX X",
+            "X  X     P     X  X",
+            "X  X X X X X X X  X",
+            "X    X   X   X    X",
+            "X X X X  X X  X X X",
             "X                 X",
             "XXXXXXXXXXXXXXXXXXX"
     };
@@ -126,7 +126,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 3;
+    int lives = 8;
     boolean gameOver = false;
 
     PacMan() {
