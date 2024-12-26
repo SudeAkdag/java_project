@@ -11,7 +11,7 @@ public class PacMan2 extends JPanel implements ActionListener, KeyListener {
         int width;
         int height;
         Image image;
-
+//sfgfs
         int startX;
         int startY;
         char direction = 'U'; // U D L R
