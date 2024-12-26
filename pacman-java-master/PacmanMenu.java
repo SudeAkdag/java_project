@@ -22,7 +22,7 @@ public class PacmanMenu extends JFrame {
         levelPanel.setLayout(new GridLayout(3, 2, 10, 10));
 
         // Level Düğmeleri
-        for (int i = 1; i <= 3; i++) {  // 3 level için buton ekliyoruz
+        for (int i = 1; i <= 5; i++) {  // 3 level için buton ekliyoruz
             JButton levelButton = new JButton("Level " + i);
             int level = i; // Lambda için final değişken
             levelButton.addActionListener(new ActionListener() {
@@ -54,8 +54,10 @@ public class PacmanMenu extends JFrame {
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         PacMan game = null;
-        PacMan2 game2 = null; // game2'yi burada null başlatıyoruz
+        PacMan2 game2 = null;
         PacMan3 game3 = null;
+        PacMan4 game4 = null; // game2'yi burada null başlatıyoruz
+        PacMan5 game5 = null;
 
         switch (level) {
             case 1:
@@ -69,6 +71,14 @@ public class PacmanMenu extends JFrame {
             case 3:
                 game3 = new PacMan3();
                 game3.tileMap = game3.tileMap; // Level 3 haritasını kullan
+                break;
+            case 4:
+                game4 = new PacMan4();
+                game4.tileMap = game4.tileMap; // Level 3 haritasını kullan
+                break;
+            case 5:
+                game5 = new PacMan5();
+                game5.tileMap = game5.tileMap; // Level 3 haritasını kullan
                 break;
             default:
                 game = new PacMan();
@@ -86,7 +96,13 @@ public class PacmanMenu extends JFrame {
         if (game3 != null) {
             gameFrame.add(game3);
         }
-        
+        if (game4 != null) {
+            gameFrame.add(game4);
+        }
+        if (game5 != null) {
+            gameFrame.add(game5);
+        }
+
 
         gameFrame.pack();
         gameFrame.setLocationRelativeTo(null);
