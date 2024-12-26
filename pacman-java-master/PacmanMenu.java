@@ -22,7 +22,7 @@ public class PacmanMenu extends JFrame {
         levelPanel.setLayout(new GridLayout(3, 2, 10, 10));
 
         // Level Düğmeleri
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 3; i++) {  // 3 level için buton ekliyoruz
             JButton levelButton = new JButton("Level " + i);
             int level = i; // Lambda için final değişken
             levelButton.addActionListener(new ActionListener() {
@@ -49,106 +49,49 @@ public class PacmanMenu extends JFrame {
         // Ana menüyü kapat
         dispose();
 
-        // PacMan oyununu başlat
+        // Seçilen level'a göre doğru PacMan oyununu başlat
         JFrame gameFrame = new JFrame("PacMan - Level " + level);
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Her level için farklı harita kullanılabilir
-        PacMan game = new PacMan();
-        game.tileMap = getTileMapForLevel(level); // Seçilen seviyeye uygun haritayı al
+        PacMan game = null;
+        PacMan2 game2 = null; // game2'yi burada null başlatıyoruz
+        PacMan3 game3 = null;
 
-        gameFrame.add(game);
+        switch (level) {
+            case 1:
+                game = new PacMan();
+                game.tileMap = game.tileMap; // Level 1 haritasını kullan
+                break;
+            case 2:
+                game2 = new PacMan2();  // Level 2'de game2'yi başlatıyoruz
+                game2.tileMap = game2.tileMap; // Level 2 haritasını kullan
+                break;
+            case 3:
+                game3 = new PacMan3();
+                game3.tileMap = game3.tileMap; // Level 3 haritasını kullan
+                break;
+            default:
+                game = new PacMan();
+                game.tileMap = game.tileMap; // Varsayılan olarak level 1
+                break;
+        }
+
+        // Eğer game2 null değilse, game2'yi JFrame'e ekle
+        if (game != null) {
+            gameFrame.add(game);
+        }
+        if (game2 != null) {
+            gameFrame.add(game2);
+        }
+        if (game3 != null) {
+            gameFrame.add(game3);
+        }
+        
+
         gameFrame.pack();
         gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
     }
-
-    private String[] getTileMapForLevel(int level) {
-        // Haritalar
-        String[] level1Map = {
-                "XXXXXXXXXXXXXXXXXXX",
-                "XXXXX    X        X",
-                "X XX XXX X XXX XX X",
-                "X                 X",
-                "X XX X XXXXX X XX X",
-                "X    X       X    X",
-                "XXXX XXXX XXXX XXXX",
-                "OOOX X       X XOOO",
-                "XXXX X XXrXX X XXXX",
-                "O       bpo       O",
-                "XXXX X XXXXX X XXXX",
-                "OOOX X       X XOOO",
-                "XXXX X XXXXX X XXXX",
-                "X        X        X",
-                "X XX XXX X XXX XX X",
-                "X  X     P     X  X",
-                "XX X X XXXXX X X XX",
-                "X    X   X   X    X",
-                "X XXXXXX X XXXXXX X",
-                "X                 X",
-                "XXXXXXXXXXXXXXXXXXX"
-        };
-
-        String[] level2Map = {
-                "XXXXXXXXXXXXXXXXXXX",
-                "X        X        X",
-                "X XX XXX X XXX XX X",
-                "X                 X",
-                "X XX X XXXXX X XX X",
-                "X    X       X    X",
-                "XXXX XXXX XXXX XXXX",
-                "OOOX X       X XOOO",
-                "XXXX X XXrXX X XXXX",
-                "O       bpo       O",
-                "XXXX X XXXXX X XXXX",
-                "OOOX X       X XOOO",
-                "XXXX X XXXXX X XXXX",
-                "X        X        X",
-                "X XX XXX X XXX XX X",
-                "X  X     P     X  X",
-                "XX X X XXXXX X X XX",
-                "X    X   X   X    X",
-                "X XXXXXX X XXXXXX X",
-                "X X               X",
-                "XXXXXXXXXXXXXXXXXXX"
-        };
-
-        String[] level3Map = {
-                "XXXXXXXXXXXXXXXXXXX",
-                "XX       X        X",
-                "X XX XXX X XXX XX X",
-                "X                 X",
-                "X XX X XXXXX X XX X",
-                "X    X       X    X",
-                "XXXX XXXX XXXX XXXX",
-                "OOOX X       X XOOO",
-                "XXXX X XXrXX X XXXX",
-                "O       bpo       O",
-                "XXXX X XXXXX X XXXX",
-                "OOOX X       X XOOO",
-                "XXXX X XXXXX X XXXX",
-                "X        X        X",
-                "X XX XXX X XXX XX X",
-                "X  X     P     X  X",
-                "XX X X XXXXX X X XX",
-                "X    X   X   X    X",
-                "X XXXXXX X XXXXXX X",
-                "X                 X",
-                "XXXXXXXXXXXXXXXXXXX"
-        };
-
-        // Seviye numarasına göre uygun haritayı döndür
-        if (level == 1) {
-            return level1Map;
-        } else if (level == 2) {
-            return level2Map;
-        } else if (level == 3) {
-            return level3Map;
-        } else {
-            return level1Map; // Varsayılan olarak level 1
-        }
-    }
-
     public static void main(String[] args) {
         new PacmanMenu();
     }

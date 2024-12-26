@@ -90,7 +90,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     //Ghosts: b = blue, o = orange, p = pink, r = red
    public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
-            "X        X        X",
+            "XXXXX    X        X",
             "X XX XXX X XXX XX X",
             "X                 X",
             "X XX X XXXXX X XX X",
@@ -108,7 +108,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             "XX X X XXXXX X X XX",
             "X    X   X   X    X",
             "X XXXXXX X XXXXXX X",
-            "X                 X",
+            "XXXXX             X",
             "XXXXXXXXXXXXXXXXXXX"
     };
     public String[] tileMap2 = {
