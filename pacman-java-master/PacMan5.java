@@ -126,7 +126,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 322;
+    int lives = 1;
     boolean gameOver = false;
 
     PacMan5() {
@@ -154,7 +154,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(newDirection);
         }
         //how long it takes to start timer, milliseconds gone between frames
-        gameLoop = new Timer(50, this); //20fps (1000/50)
+        gameLoop = new Timer(25, this); //20fps (1000/50)
         gameLoop.start();
 
     }
