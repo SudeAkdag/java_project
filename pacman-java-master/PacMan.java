@@ -88,7 +88,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
 
     //X = wall, O = skip, P = pac man, ' ' = food
     //Ghosts: b = blue, o = orange, p = pink, r = red
-    private String[] tileMap = {
+   public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
             "X        X        X",
             "X XX XXX X XXX XX X",
@@ -111,12 +111,62 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
             "X                 X",
             "XXXXXXXXXXXXXXXXXXX"
     };
+    public String[] tileMap2 = {
+            "XXXXXXXXXXXXXXXXXXX",
+            "X        X        X",
+            "X XX XXX X XXX XX X",
+            "X                 X",
+            "X XX X XXXXX X XX X",
+            "X    X       X    X",
+            "XXXX XXXX XXXX XXXX",
+            "OOOX X       X XOOO",
+            "XXXX X XXrXX X XXXX",
+            "O       bpo       O",
+            "XXXX X XXXXX X XXXX",
+            "OOOX X       X XOOO",
+            "XXXX X XXXXX X XXXX",
+            "X        X        X",
+            "X XX XXX X XXX XX X",
+            "X  X     P     X  X",
+            "XX X X XXXXX X X XX",
+            "X    X   X   X    X",
+            "X XXXXXX X XXXXXX X",
+            "X X               X",
+            "XXXXXXXXXXXXXXXXXXX"
+    };
+    public String[] tileMap3 = {
+            "XXXXXXXXXXXXXXXXXXX",
+            "XX       X        X",
+            "X XX XXX X XXX XX X",
+            "X                 X",
+            "X XX X XXXXX X XX X",
+            "X    X       X    X",
+            "XXXX XXXX XXXX XXXX",
+            "OOOX X       X XOOO",
+            "XXXX X XXrXX X XXXX",
+            "O       bpo       O",
+            "XXXX X XXXXX X XXXX",
+            "OOOX X       X XOOO",
+            "XXXX X XXXXX X XXXX",
+            "X        X        X",
+            "X XX XXX X XXX XX X",
+            "X  X     P     X  X",
+            "XX X X XXXXX X X XX",
+            "X    X   X   X    X",
+            "X XXXXXX X XXXXXX X",
+            "X                 X",
+            "XXXXXXXXXXXXXXXXXXX"
+    };
 
-    HashSet<Block> walls;
-    HashSet<Block> foods;
-    HashSet<Block> ghosts;
-    Block pacman;
-
+    static HashSet<Block> walls;
+    static HashSet<Block> foods;
+    static HashSet<Block> ghosts;
+    static Block pacman;
+    private int ghostCount = 4; // Varsayılan hayalet sayısı
+    public void setGhostCount(int count) {
+        ghostCount = count; // Yeni hayalet sayısını ayarla
+        loadMap();          // Haritayı yeni hayalet sayısıyla yeniden yükle
+    }
     Timer gameLoop;
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
@@ -137,6 +187,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         pinkGhostImage = new ImageIcon(getClass().getResource("./pinkGhost.png")).getImage();
         redGhostImage = new ImageIcon(getClass().getResource("./redGhost.png")).getImage();
 
+
         pacmanUpImage = new ImageIcon(getClass().getResource("./pacmanUp.png")).getImage();
         pacmanDownImage = new ImageIcon(getClass().getResource("./pacmanDown.png")).getImage();
         pacmanLeftImage = new ImageIcon(getClass().getResource("./pacmanLeft.png")).getImage();
@@ -154,42 +205,31 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     }
 
     public void loadMap() {
-        walls = new HashSet<Block>();
-        foods = new HashSet<Block>();
-        ghosts = new HashSet<Block>();
+        walls = new HashSet<>();
+        foods = new HashSet<>();
+        ghosts = new HashSet<>();
+
+        int currentGhostCount = 0; // Şu an eklenen hayaletlerin sayısını tutar
 
         for (int r = 0; r < rowCount; r++) {
             for (int c = 0; c < columnCount; c++) {
                 String row = tileMap[r];
                 char tileMapChar = row.charAt(c);
 
-                int x = c*tileSize;
-                int y = r*tileSize;
+                int x = c * tileSize;
+                int y = r * tileSize;
 
-                if (tileMapChar == 'X') { //block wall
+                if (tileMapChar == 'X') { // Duvar
                     Block wall = new Block(wallImage, x, y, tileSize, tileSize);
                     walls.add(wall);
-                }
-                else if (tileMapChar == 'b') { //blue ghost
-                    Block ghost = new Block(blueGhostImage, x, y, tileSize, tileSize);
+                } else if (isGhost(tileMapChar) && currentGhostCount < ghostCount) {
+                    // Hayalet ekleme kontrolü
+                    Block ghost = createGhost(tileMapChar, x, y);
                     ghosts.add(ghost);
-                }
-                else if (tileMapChar == 'o') { //orange ghost
-                    Block ghost = new Block(orangeGhostImage, x, y, tileSize, tileSize);
-                    ghosts.add(ghost);
-                }
-                else if (tileMapChar == 'p') { //pink ghost
-                    Block ghost = new Block(pinkGhostImage, x, y, tileSize, tileSize);
-                    ghosts.add(ghost);
-                }
-                else if (tileMapChar == 'r') { //red ghost
-                    Block ghost = new Block(redGhostImage, x, y, tileSize, tileSize);
-                    ghosts.add(ghost);
-                }
-                else if (tileMapChar == 'P') { //pacman
+                    currentGhostCount++; // Eklenen hayalet sayısını artır
+                } else if (tileMapChar == 'P') { // Pac-Man
                     pacman = new Block(pacmanRightImage, x, y, tileSize, tileSize);
-                }
-                else if (tileMapChar == ' ') { //food
+                } else if (tileMapChar == ' ') { // Yem
                     Block food = new Block(null, x + 14, y + 14, 4, 4);
                     foods.add(food);
                 }
@@ -197,9 +237,31 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+
+    // Hayalet mi? Kontrol fonksiyonu
+    private boolean isGhost(char tile) {
+        return tile == 'b' || tile == 'o' || tile == 'p' || tile == 'r';
+    }
+
+    // Hayalet yaratma fonksiyonu
+    private Block createGhost(char tile, int x, int y) {
+        Image ghostImage = switch (tile) {
+            case 'b' -> blueGhostImage;
+            case 'o' -> orangeGhostImage;
+            case 'p' -> pinkGhostImage;
+            case 'r' -> redGhostImage;
+            default -> null;
+        };
+        return new Block(ghostImage, x, y, tileSize, tileSize);
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
+    }
+    public void setGameSpeed(int fps) {
+        int delay = 1000 / fps; // Frame başına milisaniye
+        gameLoop.setDelay(delay);
     }
 
     public void draw(Graphics g) {
