@@ -1,28 +1,4 @@
 // Main Application Entry Point
-import javax.swing.JFrame;
-
-public class App {
-    public static void main(String[] args) {
-        int rowCount = 21;
-        int columnCount = 19;
-        int tileSize = 32;
-        int boardWidth = columnCount * tileSize;
-        int boardHeight = rowCount * tileSize;
-
-        JFrame frame = new JFrame("Pac Man");
-        frame.setVisible(true);
-        frame.setSize(boardWidth, boardHeight);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        PacMan5 pacmanGame = new PacMan5();
-        frame.add(pacmanGame);
-        frame.pack();
-        pacmanGame.requestFocus();
-        frame.setVisible(true);
-    }
-}
 
 // Level 5 Implementation
 import java.awt.*;
@@ -281,6 +257,56 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(directions[random.nextInt(4)]);
         }
     }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        move();
+        repaint();
+        if (gameOver) {
+            gameLoop.stop();
+        }
+    }
 
     @Override
-    public void
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {}
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (gameOver) {
+            loadMap();
+            resetPositions();
+            lives = 3;
+            score = 0;
+            gameOver = false;
+            gameLoop.start();
+        }
+        // System.out.println("KeyEvent: " + e.getKeyCode());
+        if (e.getKeyCode() == KeyEvent.VK_UP) {
+            pacman.updateDirection('U');
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            pacman.updateDirection('D');
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            pacman.updateDirection('L');
+        }
+        else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            pacman.updateDirection('R');
+        }
+
+        if (pacman.direction == 'U') {
+            pacman.image = pacmanUpImage;
+        }
+        else if (pacman.direction == 'D') {
+            pacman.image = pacmanDownImage;
+        }
+        else if (pacman.direction == 'L') {
+            pacman.image = pacmanLeftImage;
+        }
+        else if (pacman.direction == 'R') {
+            pacman.image = pacmanRightImage;
+        }
+    }
+}

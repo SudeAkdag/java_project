@@ -1,7 +1,7 @@
 import javax.swing.JFrame;
 
 public class App {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         int rowCount = 21;
         int columnCount = 19;
         int tileSize = 32;
@@ -15,11 +15,10 @@ public class App {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        PacMan4 pacmanGame = new PacMan4();
+        PacMan5 pacmanGame = new PacMan5();
         frame.add(pacmanGame);
         frame.pack();
         pacmanGame.requestFocus();
         frame.setVisible(true);
-
     }
 }
