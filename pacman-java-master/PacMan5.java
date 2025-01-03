@@ -93,25 +93,25 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
     //Ghosts: b = blue, o = orange, p = pink, r = red
     public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
-            "X  r     X     o  X",
+            "X        X        X",
             "X XX XXX X XXX XX X",
             "X                 X",
             "X XX X XXXXX X XX X",
             "X    X       X    X",
             "XXXX XXXX XXXX XXXX",
-            "OOOX X       X XOOO",
-            "XXXX X XXrXX X XXXX",
-            "X  b      o       X",
+            "OOOX X  bpor X XOOO",
+            "XXXX X XX XX X XXXX",
+            "X                 X",
             "XXXX X XXXXX X XXXX",
             "OOOX X       X XOOO",
             "XXXX X XXXXX X XXXX",
             "X        X        X",
             "X XX XXX X XXX XX X",
-            "X  X     P     X  X",
+            "X  X     P   C X  X",
             "XX X X XXXXX X X XX",
             "X    X   X   X    X",
             "X XXXXXX X XXXXXX X",
-            "X            p    X",
+            "X                 X",
             "XXXXXXXXXXXXXXXXXXX"
     };
 
@@ -138,6 +138,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
     private boolean isPoweredUp = false;
     private int powerUpTimer = 0;
     private static final int POWER_UP_DURATION = 300; // 15 saniye (50ms * 300)
+    private static final int CHERRY_SCORE = 300; // Kiraz yeme puanı
 
     PacMan5() {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
@@ -168,7 +169,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(newDirection);
         }
         //how long it takes to start timer, milliseconds gone between frames
-        gameLoop = new Timer(30, this); //20fps (1000/50)
+        gameLoop = new Timer(33, this); //20fps (1000/50)
         gameLoop.start();
 
     }
@@ -203,7 +204,8 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
                     Block food = new Block(null, x + 14, y + 14, 4, 4);
                     foods.add(food);
                 } else if (tileMapChar == 'C') { // Güç yemi
-                    powerUps.add(new Block(cherryImage, x, y, tileSize, tileSize));
+                    Block cherry = new Block(cherryImage, x, y, tileSize, tileSize);
+                    powerUps.add(cherry);
                 }
             }
         }
@@ -335,6 +337,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
             }
         }
 
+
         // Güç modu süresi kontrolü
         if (isPoweredUp) {
             powerUpTimer--;
@@ -345,6 +348,16 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
                     ghost.image = getGhostImage(ghost.ghostType);
                 }
             }
+
+            Block cherryEaten = null;
+            for (Block powerUp : powerUps) {
+                if (collision(pacman, powerUp)) {
+                    cherryEaten = powerUp;
+                    score += 300;
+                }
+            }
+            powerUps.remove(cherryEaten);
+
         }
     }
 
