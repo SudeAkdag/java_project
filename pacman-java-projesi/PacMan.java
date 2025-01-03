@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
 
-public class PacMan2 extends JPanel implements ActionListener, KeyListener {
+public class PacMan extends JPanel implements ActionListener, KeyListener {
     class Block {
         int x;
         int y;
@@ -89,28 +89,28 @@ public class PacMan2 extends JPanel implements ActionListener, KeyListener {
     //X = wall, O = skip, P = pac man, ' ' = food
     //Ghosts: b = blue, o = orange, p = pink, r = red
     public String[] tileMap = {
-            "XXXXXXXXXXXXXXXXXXX",
-            "X        X        X",
-            "X XX XXX X XXX XX X",
-            "X         p       X",
-            "X XX X XXXXX X XX X",
-            "X    X   o   X    X",
-            "XXXX XXXX XXXX XXXX",
-            "OOOX X       X XOOO",
-            "XXXX X XX XX X XXXX",
-            "X      b          X",
-            "XXXX X XX XX X XXXX",
-            "OOOX X       X XOOO",
-            "X XX X X XXX X XX X",
-            "X        X        X",
-            "X XX XXX X XXX XX X",
-            "X  X     P     X  X",
-            "XX X X XXXXX X X XX",
-            "X    X   X   X    X",
-            "X X   XX X XXX    X",
-            "X                 X",
-            "XXXXXXXXXXXXXXXXXXX"
-    };
+        "XXXXXXXXXXXXXXXXXXX",
+        "X        X        X",
+        "X XX XXX X XXX XX X",
+        "X                 X",
+        "X XX X XXXXX X XX X",
+        "X    X       X    X",
+        "XXXX XXXX XXXX XXXX",
+        "OOOX X  bor  X XOOO",
+        "XXXX X XX XX X XXXX",
+        "X                 X",
+        "XXXX X XXXXX X XXXX",
+        "OOOX X       X XOOO",
+        "XXXX X XXXXX X XXXX",
+        "X        X        X",
+        "X XX XXX X XXX XX X",
+        "X  X     P     X  X",
+        "XX X X XXXXX X X XX",
+        "X    X   X   X    X",
+        "X XXXXXX X XXXXXX X",
+        "X                 X",
+        "XXXXXXXXXXXXXXXXXXX"
+};
 
 
     static HashSet<Block> walls;
@@ -126,10 +126,10 @@ public class PacMan2 extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 6;
+    int lives = 8;
     boolean gameOver = false;
 
-    PacMan2() {
+    PacMan() {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
         setBackground(Color.BLACK);
         addKeyListener(this);

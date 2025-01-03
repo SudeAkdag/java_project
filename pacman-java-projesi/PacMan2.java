@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
 
-public class PacMan3 extends JPanel implements ActionListener, KeyListener {
+public class PacMan2 extends JPanel implements ActionListener, KeyListener {
     class Block {
         int x;
         int y;
@@ -90,24 +90,24 @@ public class PacMan3 extends JPanel implements ActionListener, KeyListener {
     //Ghosts: b = blue, o = orange, p = pink, r = red
     public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
-            "X        X     r  X",
-            "X XX XXX X XXX XX X",
-            "X                 X",
-            "X XX X XXXXX X XX X",
             "X    X       X    X",
+            "X XX X XXXXX X XX X",
+            "X                 X",
+            "XXXX X XXXXX X XXXX",
+            "OOOX           XOOO",
             "XXXX XXXX XXXX XXXX",
-            "OOOX X       X XOOO",
+            "X    X  bop  X    X",
             "XXXX X XX XX X XXXX",
-            "X   b             X",
-            "XXXX X XXXXX X XXXX",
-            "OOOX X       X XOOO",
-            "XXXX X XXXXX X XXXX",
-            "X        X    o   X",
-            "X XX XXX X XXX XX X",
-            "X  X     P     X  X",
-            "XX X X XXXXX X X XX",
+            "OOOX           XOOO",
+            "XXXX X XX XX X XXXX",
+            "X    X       X    X",
+            "XXXX X X X X X XXXX",
+            "OOOX     X     XOOO",
+            "XXXX XXX X XXX XXXX",
+            "X    X   P   X    X",
+            "X XX X XXXXX X XX X",
             "X    X   X   X    X",
-            "X XXXXXX X XXXXXX X",
+            "X XX X X X X X XX X",
             "X                 X",
             "XXXXXXXXXXXXXXXXXXX"
     };
@@ -126,10 +126,10 @@ public class PacMan3 extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 4;
+    int lives = 6;
     boolean gameOver = false;
 
-    PacMan3() {
+    PacMan2() {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
         setBackground(Color.BLACK);
         addKeyListener(this);
@@ -154,7 +154,7 @@ public class PacMan3 extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(newDirection);
         }
         //how long it takes to start timer, milliseconds gone between frames
-        gameLoop = new Timer(35, this); //20fps (1000/50)
+        gameLoop = new Timer(50, this); //20fps (1000/50)
         gameLoop.start();
 
     }
