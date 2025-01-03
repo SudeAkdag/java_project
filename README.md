@@ -1,5 +1,6 @@
 Java Projesi: Pac-Man
 
+
 Projemiz kendi bildiklerimiz ve araştırdıklarımızla Pac-Man oyunu yapmaktır.
 
 Pac-Man karakterimiz ok tuşları ile hareket etmektedir ve oyunumuzda 5 adet bölüm vardır. Bölümden bölüme Pac-Man'in sahip olduğu can sayısı farklıdır.
