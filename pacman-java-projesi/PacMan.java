@@ -126,7 +126,7 @@ public class PacMan extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 8;
+    int lives = 6;
     boolean gameOver = false;
 
     PacMan() {

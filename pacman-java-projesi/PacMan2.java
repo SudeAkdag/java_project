@@ -136,7 +136,7 @@ public class PacMan2 extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
 
         //load images
-        wallImage = new ImageIcon(getClass().getResource("./wall.png")).getImage();
+        wallImage = new ImageIcon(getClass().getResource("./wall2.png")).getImage();
         blueGhostImage = new ImageIcon(getClass().getResource("./blueGhost.png")).getImage();
         orangeGhostImage = new ImageIcon(getClass().getResource("./orangeGhost.png")).getImage();
         pinkGhostImage = new ImageIcon(getClass().getResource("./pinkGhost.png")).getImage();
@@ -154,7 +154,7 @@ public class PacMan2 extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(newDirection);
         }
         //how long it takes to start timer, milliseconds gone between frames
-        gameLoop = new Timer(50, this); //20fps (1000/50)
+        gameLoop = new Timer(40, this); //20fps (1000/50)
         gameLoop.start();
 
     }

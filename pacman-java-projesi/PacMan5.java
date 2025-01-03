@@ -9,7 +9,6 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
     class Block {
         int x;
         int y;
-
         int width;
         int height;
         Image image;
@@ -93,25 +92,25 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
     //Ghosts: b = blue, o = orange, p = pink, r = red
     public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
-            "X        X        X",
-            "X XX XXX X XXX XX X",
-            "X                 X",
-            "X XX X XXXXX X XX X",
-            "X    X       X    X",
-            "XXXX XXXX XXXX XXXX",
-            "OOOX X  bpor X XOOO",
-            "XXXX X XX XX X XXXX",
-            "X                 X",
-            "XXXX X XXXXX X XXXX",
-            "OOOX X       X XOOO",
-            "XXXX X XXXXX X XXXX",
-            "X        X        X",
-            "X XX XXX X XXX XX X",
-            "X  X     P   C X  X",
-            "XX X X XXXXX X X XX",
+            "X        C        X",
+            "X X XX XXXXX XX X X",
+            "X X    X   X    X X",
+            "X XX X X X X X XX X",
             "X    X   X   X    X",
-            "X XXXXXX X XXXXXX X",
-            "X                 X",
+            "XXCXXXXX X XXXXXCXX",
+            "OX   X  bpor X   XO",
+            "XX X X XX XX X X XX",
+            "X  X           X  X",
+            "XXXX X XXXXX X XXXX",
+            "X  X           X  X",
+            "XX X XXX X XXX X XX",
+            "OX       X       XO",
+            "XXCX X X X X X XCXX",
+            "X  X   X P X   X  X",
+            "X XX X XXXXX X XX X",
+            "X X  X       X  X X",
+            "X X XXXX X XXXX X X",
+            "X        X        X",
             "XXXXXXXXXXXXXXXXXXX"
     };
 
@@ -129,7 +128,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 4;
+    int lives = 3;
     boolean gameOver = false;
 
     private Image scaredGhostImage;
@@ -147,7 +146,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
 
         //load images
-        wallImage = new ImageIcon(getClass().getResource("./wall.png")).getImage();
+        wallImage = new ImageIcon(getClass().getResource("./wall5.png")).getImage();
         blueGhostImage = new ImageIcon(getClass().getResource("./blueGhost.png")).getImage();
         orangeGhostImage = new ImageIcon(getClass().getResource("./orangeGhost.png")).getImage();
         pinkGhostImage = new ImageIcon(getClass().getResource("./pinkGhost.png")).getImage();
@@ -169,7 +168,7 @@ public class PacMan5 extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(newDirection);
         }
         //how long it takes to start timer, milliseconds gone between frames
-        gameLoop = new Timer(33, this); //20fps (1000/50)
+        gameLoop = new Timer(25, this); //20fps (1000/50)
         gameLoop.start();
 
     }

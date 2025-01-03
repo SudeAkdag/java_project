@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Iterator;
 import javax.swing.*;
 
 public class PacMan4 extends JPanel implements ActionListener, KeyListener {
@@ -17,6 +18,7 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         char direction = 'U'; // U D L R
         int velocityX = 0;
         int velocityY = 0;
+        char ghostType;
 
         Block(Image image, int x, int y, int width, int height) {
             this.image = image;
@@ -90,25 +92,25 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
     //Ghosts: b = blue, o = orange, p = pink, r = red
     public String[] tileMap = {
             "XXXXXXXXXXXXXXXXXXX",
-            "X  r     X     o  X",
-            "X XX XXX X XXX XX X",
-            "X                 X",
+            "X        X        X",
+            "X XXXXXX X XXXXXX X",
+            "XCX             X X",
+            "X X XX XXXXX XX X X",
+            "X    X       X    X",
+            "XXXX X XX XX X XXXX",
+            "X    X bopr  X    X",
+            "X X XX XX XX XX X X",
+            "X X             X X",
             "X XX X XXXXX X XX X",
             "X    X       X    X",
-            "XXXX XXXX XXXX XXXX",
-            "OOOX X       X XOOO",
-            "XXXX X XXrXX X XXXX",
-            "X  b      o       X",
-            "XXXX X XXXXX X XXXX",
-            "OOOX X       X XOOO",
-            "XXXX X XXXXX X XXXX",
-            "X        X        X",
             "X XX XXX X XXX XX X",
-            "X  X     P     X  X",
+            "X    X   X   X   CX",
             "XX X X XXXXX X X XX",
+            "X  X     P     X  X",
+            "X XX XXX X XXX XX X",
             "X    X   X   X    X",
-            "X XXXXXX X XXXXXX X",
-            "X            p    X",
+            "X XX X XXXXX X XX X",
+            "X C  X       X    X",
             "XXXXXXXXXXXXXXXXXXX"
     };
 
@@ -126,8 +128,16 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
     char[] directions = {'U', 'D', 'L', 'R'}; //up down left right
     Random random = new Random();
     int score = 0;
-    int lives = 4;
+    int lives = 3;
     boolean gameOver = false;
+
+    private Image scaredGhostImage;
+    private Image cherryImage;
+    private HashSet<PacMan4.Block> powerUps;
+    private boolean isPoweredUp = false;
+    private int powerUpTimer = 0;
+    private static final int POWER_UP_DURATION = 300; // 15 saniye (50ms * 300)
+    private static final int CHERRY_SCORE = 300; // Kiraz yeme puanı
 
     PacMan4() {
         setPreferredSize(new Dimension(boardWidth, boardHeight));
@@ -136,7 +146,7 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         setFocusable(true);
 
         //load images
-        wallImage = new ImageIcon(getClass().getResource("./wall.png")).getImage();
+        wallImage = new ImageIcon(getClass().getResource("./wall4.png")).getImage();
         blueGhostImage = new ImageIcon(getClass().getResource("./blueGhost.png")).getImage();
         orangeGhostImage = new ImageIcon(getClass().getResource("./orangeGhost.png")).getImage();
         pinkGhostImage = new ImageIcon(getClass().getResource("./pinkGhost.png")).getImage();
@@ -148,13 +158,17 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         pacmanLeftImage = new ImageIcon(getClass().getResource("./pacmanLeft.png")).getImage();
         pacmanRightImage = new ImageIcon(getClass().getResource("./pacmanRight.png")).getImage();
 
+        scaredGhostImage = new ImageIcon(getClass().getResource("./scaredGhost.png")).getImage();
+        cherryImage = new ImageIcon(getClass().getResource("./cherry.png")).getImage();
+        powerUps = new HashSet<>();
+
         loadMap();
         for (Block ghost : ghosts) {
             char newDirection = directions[random.nextInt(4)];
             ghost.updateDirection(newDirection);
         }
         //how long it takes to start timer, milliseconds gone between frames
-        gameLoop = new Timer(30, this); //20fps (1000/50)
+        gameLoop = new Timer(28, this); //20fps (1000/50)
         gameLoop.start();
 
     }
@@ -163,6 +177,7 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         walls = new HashSet<>();
         foods = new HashSet<>();
         ghosts = new HashSet<>();
+        powerUps.clear();
 
         int currentGhostCount = 0; // Şu an eklenen hayaletlerin sayısını tutar
 
@@ -187,6 +202,9 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
                 } else if (tileMapChar == ' ') { // Yem
                     Block food = new Block(null, x + 14, y + 14, 4, 4);
                     foods.add(food);
+                } else if (tileMapChar == 'C') { // Güç yemi
+                    PacMan4.Block cherry = new PacMan4.Block(cherryImage, x, y, tileSize, tileSize);
+                    powerUps.add(cherry);
                 }
             }
         }
@@ -199,15 +217,10 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
     }
 
     // Hayalet yaratma fonksiyonu
-    private Block createGhost(char tile, int x, int y) {
-        Image ghostImage = switch (tile) {
-            case 'b' -> blueGhostImage;
-            case 'o' -> orangeGhostImage;
-            case 'p' -> pinkGhostImage;
-            case 'r' -> redGhostImage;
-            default -> null;
-        };
-        return new Block(ghostImage, x, y, tileSize, tileSize);
+    private PacMan4.Block createGhost(char tile, int x, int y) {
+        PacMan4.Block ghost = new PacMan4.Block(getGhostImage(tile), x, y, tileSize, tileSize);
+        ghost.ghostType = tile; // Hayalet tipini kaydet
+        return ghost;
     }
 
     public void paintComponent(Graphics g) {
@@ -242,6 +255,11 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         else {
             g.drawString("x" + String.valueOf(lives) + " Score: " + String.valueOf(score), tileSize/2, tileSize/2);
         }
+
+        // Güç yemlerini çiz
+        for (PacMan4.Block powerUp : powerUps) {
+            g.drawImage(powerUp.image, powerUp.x, powerUp.y, powerUp.width, powerUp.height, null);
+        }
     }
 
     public void move() {
@@ -258,14 +276,19 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         }
 
         //check ghost collisions
-        for (Block ghost : ghosts) {
+        for (PacMan4.Block ghost : ghosts) {
             if (collision(ghost, pacman)) {
-                lives -= 1;
-                if (lives == 0) {
-                    gameOver = true;
-                    return;
+                if (isPoweredUp) {
+                    // Hayaleti ye
+                    ghost.reset();
+                    score += 200;
+                } else {
+                    lives--;
+                    if (lives <= 0) {
+                        gameOver = true;
+                    }
+                    resetPositions();
                 }
-                resetPositions();
             }
 
             if (ghost.y == tileSize*9 && ghost.direction != 'U' && ghost.direction != 'D') {
@@ -296,6 +319,44 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         if (foods.isEmpty()) {
             loadMap();
             resetPositions();
+        }
+
+        // Güç yemi kontrolü
+        Iterator<PacMan4.Block> powerUpIterator = powerUps.iterator();
+        while (powerUpIterator.hasNext()) {
+            PacMan4.Block powerUp = powerUpIterator.next();
+            if (collision(pacman, powerUp)) {
+                powerUpIterator.remove();
+                isPoweredUp = true;
+                powerUpTimer = POWER_UP_DURATION;
+                // Hayaletleri korkmuş moda geçir
+                for (PacMan4.Block ghost : ghosts) {
+                    ghost.image = scaredGhostImage;
+                }
+            }
+        }
+
+
+        // Güç modu süresi kontrolü
+        if (isPoweredUp) {
+            powerUpTimer--;
+            if (powerUpTimer <= 0) {
+                isPoweredUp = false;
+                // Hayaletleri normal görünüme döndür
+                for (PacMan4.Block ghost : ghosts) {
+                    ghost.image = getGhostImage(ghost.ghostType);
+                }
+            }
+
+            PacMan4.Block cherryEaten = null;
+            for (PacMan4.Block powerUp : powerUps) {
+                if (collision(pacman, powerUp)) {
+                    cherryEaten = powerUp;
+                    score += 300;
+                }
+            }
+            powerUps.remove(cherryEaten);
+
         }
     }
 
@@ -368,5 +429,16 @@ public class PacMan4 extends JPanel implements ActionListener, KeyListener {
         else if (pacman.direction == 'R') {
             pacman.image = pacmanRightImage;
         }
+    }
+
+    // Hayalet görüntüsünü döndüren yardımcı metod
+    private Image getGhostImage(char type) {
+        return switch (type) {
+            case 'b' -> blueGhostImage;
+            case 'o' -> orangeGhostImage;
+            case 'p' -> pinkGhostImage;
+            case 'r' -> redGhostImage;
+            default -> blueGhostImage;
+        };
     }
 }
